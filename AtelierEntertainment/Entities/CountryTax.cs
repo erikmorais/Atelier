@@ -4,10 +4,10 @@ using System.Text;
 
 namespace AtelierEntertainment.Entities
 {
-   public class CountryTax
+    public class CountryTax
     {
-        int TaxId { get; set; }
-        string Country { get; set; }
-        double Percentual { get; set; }
+        public int TaxId { get; set; }
+        public string Country { get; set; }
+        public double Percentual { get; set; }
     }
 }

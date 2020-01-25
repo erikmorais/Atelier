@@ -4,5 +4,5 @@ using AtelierEntertainment.Entities;
 public interface ITaxCalculator
 {
     Task<double>  CalcTaxAsyn(Order order);
-    double CalcTax(Order order);
+    double CalcTaxOrder(Order order);
 }

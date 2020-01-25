@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace AtelierEntertainment.Interfaces
 {
-    public interface ITaxRepository
+    public interface ICountryTaxRepository 
     {
-        Task<List<CountryTax>> getCountryTaxes(string countryId);
+        Task<List<CountryTax>> GetTaxes( string countryId);
     }
 }

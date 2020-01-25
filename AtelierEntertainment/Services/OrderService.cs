@@ -1,4 +1,5 @@
 ﻿using AtelierEntertainment.Entities;
+using AtelierEntertainment.Interfaces;
 using System;
 using System.Linq;
 
@@ -6,12 +7,15 @@ namespace AtelierEntertainmentEntities
 {
     public class OrderService
     {
-        private readonly ITaxCalculator taxCalculator;
+        private readonly ITaxRepository taxRepository;
+        private readonly IOrderCalculationService orderCalculationService;
 
-        public   OrderService (ITaxCalculator taxCalculator)
+        public OrderService(ITaxRepository taxRepository, IOrderCalculationService orderCalculation)
         {
-            this.taxCalculator = taxCalculator;
+            this.taxRepository = taxRepository;
+            this.orderCalculationService = orderCalculation;
         }
+        // TODO Convert to Async
         public void CreateOrder(Order order)
         {
             //if (order.Customer.Country == "AU")
@@ -19,6 +23,7 @@ namespace AtelierEntertainmentEntities
             //else if (order.Customer.Country == "UK")
             //    order.Total = Convert.ToDecimal(order.Items.Sum(_ => _.Price) * 1.2);
 
+            order = orderCalculationService.Calc(order).Result;
 
 
             var dataContext = new OrderDataContext();

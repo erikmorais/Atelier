@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace AtelierEntertainment.Interfaces
 {
-    public interface ITaxRepository
+    public interface IOrderCalculationService
     {
-        Task<List<CountryTax>> getCountryTaxes(string countryId);
+        Task<Order> Calc(Order order);
     }
 }

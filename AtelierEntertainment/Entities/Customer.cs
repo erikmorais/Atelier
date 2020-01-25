@@ -3,6 +3,6 @@
     public class Customer
     {
         public int Id { get; set; }
-        internal string Country;
+        public string Country { get; set; }
     }
 }
