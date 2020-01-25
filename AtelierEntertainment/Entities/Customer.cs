@@ -1,4 +1,4 @@
-﻿namespace AtelierEntertainment
+﻿namespace AtelierEntertainment.Entities
 {
     public class Customer
     {

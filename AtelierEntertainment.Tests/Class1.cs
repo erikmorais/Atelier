@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AtelierEntertainment.Tests
+namespace AtelierEntertainmentEntities.Tests
 {
     public class Class1
     {

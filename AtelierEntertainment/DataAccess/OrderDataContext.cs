@@ -1,7 +1,8 @@
-﻿using System;
+﻿using AtelierEntertainment.Entities;
+using System;
 using System.Data.SqlClient;
 
-namespace AtelierEntertainment
+namespace AtelierEntertainmentEntities
 {
     public class OrderDataContext
     {

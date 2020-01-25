@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace AtelierEntertainment
+namespace AtelierEntertainment.Entities
 {
     public class Order
     {
