@@ -44,7 +44,7 @@ namespace AtelierEntertainmentEntities.Services
             {
                 foreach (var item in taxes)
                 {
-                    total += order.Items.Select(a => a.Price * a.Quantity * (1 + item.Percentual)).Sum();
+                    total += order.Items.Select(a => a.Price * a.Quantity * (item.Percentual)).Sum();
                 }
             }
 

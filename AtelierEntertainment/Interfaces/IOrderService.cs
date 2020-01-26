@@ -5,6 +5,6 @@ namespace AtelierEntertainmentEntities
     public interface IOrderService
     {
         void CreateOrder(Order order);
-        Order ViewOrder();
+        Order ViewOrder(int porderId);
     }
 }

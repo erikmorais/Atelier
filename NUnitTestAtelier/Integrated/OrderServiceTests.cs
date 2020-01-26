@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace NUnitTestAtelier.Integrated
 {
-   public  class OrderServiceTests
+    public class OrderServiceTests
     {
 
         private string _connectionString;// = "Server=DESKTOP-SFC808U;Database=Atelier;Integrated Security=true;";
@@ -34,20 +34,47 @@ namespace NUnitTestAtelier.Integrated
         {
             // Arrange
             CountryTaxDataContext countryTaxDataContext = new CountryTaxDataContext(_connectionString);
-            ITaxRepository taxRepository  = new TaxRepository(countryTaxDataContext);
+            ITaxRepository taxRepository = new TaxRepository(countryTaxDataContext);
             ITaxCalculator taxCalculator = new TaxCalculator(taxRepository);
             IOrderCalculationService orderCalculation = new OrderCalculationService(taxCalculator);
-            IOrderService orderService = new OrderService(taxRepository , orderCalculation , _connectionString);
+            IOrderService orderService = new OrderService(taxRepository, orderCalculation, _connectionString);
+
+            //  int orderID = DateTime.da;
+            var date = DateTime.Now;
+            var orderIdStr =  date.Hour.ToString() + date.Minute.ToString() + date.Second.ToString() + date.Millisecond.ToString();
+            int orderIdUK = int.Parse(orderIdStr);
+
 
             var orderUK = new Order();
-
-            orderUK.Customer = new Customer() {
+            orderUK.Id = orderIdUK;
+            orderUK.Customer = new Customer()
+            {
                 Id = 1, //uk
                 Country = "UK"
             };
 
+            orderUK.Items = new List<orderItem>()
+                            {
+                                new orderItem() {
+                                        Code = "D",
+                                        Description = "Product D",
+                                        Price = 10,
+                                        Quantity = 1
+                            },
+                                 new orderItem() {
+                                        Code = "E",
+                                        Description = "Product E",
+                                        Price = 20,
+                                        Quantity = 1
+                            }
+            };
+
             //Act
             orderService.CreateOrder(orderUK);
+
+            
+
+            //Assert 
         }
     }
 }

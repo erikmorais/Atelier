@@ -87,6 +87,7 @@ namespace AtelierEntertainmentEntities
             {
                 using (var cmd = conn.CreateCommand())
                 {
+                    conn.Open();
                     cmd.CommandText = $"INSERT INTO dbo.Orders( id, customerId ,Total, TotalTax ) VALUES  (@orderId, @customerId, @total, @totalTax) ";
 
                     cmd.Parameters.AddWithValue("@orderId", order.Id);
@@ -96,17 +97,19 @@ namespace AtelierEntertainmentEntities
 
                     cmd.ExecuteNonQuery();
 
+                    conn.Close();
                     foreach (var item in order.Items)
                     {
                         using (var cmdItem = conn.CreateCommand())
                         {
-
+                            conn.Open();
                             cmdItem.CommandText = $"INSERT INTO dbo.OrderItems VALUES @orderId, @itemCode, @itemDescription, @itemPrice;";
                             cmdItem.Parameters.AddWithValue("@orderId", order.Id);
                             cmdItem.Parameters.AddWithValue("@itemCode", item.Code);
                             cmdItem.Parameters.AddWithValue("@itemDescription", item.Description);
                             cmdItem.Parameters.AddWithValue("@itemPrice", item.Price);
                             cmdItem.ExecuteNonQuery();
+                            conn.Close();
 
                         }
 
