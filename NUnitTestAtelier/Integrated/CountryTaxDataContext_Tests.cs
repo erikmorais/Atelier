@@ -3,7 +3,7 @@ using AtelierEntertainment.Interfaces;
 using NUnit.Framework;
 using System.Threading.Tasks;
 
-namespace TaxDataContext.DataAccess
+namespace  DataAccess.Taxes
 {
     public class CountryTaxDataContext_Tests
     {
