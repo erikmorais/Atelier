@@ -6,6 +6,7 @@ using AtelierEntertainment.Services;
 using AtelierEntertainmentEntities;
 using AtelierEntertainmentEntities.Interfaces;
 using AtelierEntertainmentEntities.Services;
+using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -14,24 +15,27 @@ using System.Threading.Tasks;
 
 namespace NUnitTestAtelier.UnitTest
 {
-    public class OrderService_test
+    public class Tax_Caculation_Engine_test
     {
-        private string _connectionString;
 
         [Test]
-        public async Task CreateOrderTest_UK()
+        public async Task Test_Tax_Calculator_Service()
         {
             // Arrange
-            TaxDataContext countryTaxDataContext = new TaxDataContext(_connectionString);
-            OrderDataContext orderDataContext = new OrderDataContext(_connectionString);
+            var mockTaxRepository = new Mock<ITaxRepository>();
+            List<CountryTax> countryTaxes = new List<CountryTax>()
+            {
+                new CountryTax()
+                {
+                    Country = "UK",
+                    Percentual = 0.2m,
+                    TaxId =1
+                }
+            };
 
-            ITaxRepository taxRepository = new TaxRepository(countryTaxDataContext);
-            IOrderRepository orderRepository = new OrderRepository(orderDataContext);
+            mockTaxRepository.Setup(a => a.getCountryTaxes("UK")).Returns(Task.FromResult(countryTaxes));
+            ITaxCalculator taxCalculator = new TaxCalculator(mockTaxRepository.Object);
 
-            ITaxCalculator taxCalculator = new TaxCalculator(taxRepository);
-            IOrderCalculationService orderCalculation = new OrderCalculationService(taxCalculator);
-
-            IOrderService orderService = new OrderService(orderRepository, orderCalculation);
 
             var date = DateTime.Now;
             var orderIdStr = date.Hour.ToString() + date.Minute.ToString() + date.Second.ToString() + date.Millisecond.ToString();
@@ -52,7 +56,7 @@ namespace NUnitTestAtelier.UnitTest
                                         Code = "D",
                                         Description = "Product D",
                                         Price = 10,
-                                        Quantity = 1
+                                        Quantity = 2
                             },
                                  new orderItem() {
                                         Code = "E",
@@ -63,11 +67,10 @@ namespace NUnitTestAtelier.UnitTest
             };
 
             //Act
-            orderService.CreateOrder(orderUK);
-            var singleOrderUk = await orderService.ViewOrderAsyn(orderUK.Id);
+            var tax = await taxCalculator.CalcTaxAsyn(orderUK);
 
             //Assert 
-            Assert.AreEqual(36, singleOrderUk.Total);
+            Assert.AreEqual(8.0m, tax);
 
         }
 
