@@ -3,11 +3,12 @@ using AtelierEntertainment.Interfaces;
 using NUnit.Framework;
 using System.Threading.Tasks;
 
-namespace Tests
+namespace TaxDataContext.DataAccess
 {
     public class CountryTaxDataContext_Tests
     {
         private string _connectionString;// = "Server=DESKTOP-SFC808U;Database=Atelier;Integrated Security=true;";
+
         [SetUp]
         public void Setup()
         {

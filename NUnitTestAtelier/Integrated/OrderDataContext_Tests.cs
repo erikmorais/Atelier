@@ -6,7 +6,7 @@ using AtelierEntertainmentEntities.Interfaces;
 using NUnit.Framework;
 using System.Threading.Tasks;
 
-namespace Tests
+namespace OrderDataContext.DataAccess
 {
     public class OrderDataContext_Tests
     {

@@ -12,9 +12,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NUnitTestAtelier.Integrated
+namespace OrderServices.Integrated
 {
-    public class OrderServiceTests
+    public class OrderService_Tests
     {
 
         private string _connectionString;// = "Server=DESKTOP-SFC808U;Database=Atelier;Integrated Security=true;";
