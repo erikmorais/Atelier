@@ -88,7 +88,7 @@ namespace AtelierEntertainmentEntities
                 using (var cmd = conn.CreateCommand())
                 {
                     conn.Open();
-                    cmd.CommandText = $"INSERT INTO dbo.Orders( id, customerId ,Total, TotalTax ) VALUES  (@orderId, @customerId, @total, @totalTax) ";
+                    cmd.CommandText = $"INSERT INTO dbo.Orders( id, Customer_Id ,Total, TotalTax ) VALUES  (@orderId, @customerId, @total, @totalTax) ";
 
                     cmd.Parameters.AddWithValue("@orderId", order.Id);
                     cmd.Parameters.AddWithValue("@customerId", order.Customer.Id);
@@ -103,16 +103,55 @@ namespace AtelierEntertainmentEntities
                         using (var cmdItem = conn.CreateCommand())
                         {
                             conn.Open();
-                            cmdItem.CommandText = $"INSERT INTO dbo.OrderItems VALUES @orderId, @itemCode, @itemDescription, @itemPrice;";
+                            cmdItem.CommandText = $"INSERT INTO dbo.OrderItems(Code ,Price ,Description ,Order_Id ,Quantity ) VALUES (@itemCode  , @itemPrice, @itemDescription, @orderId , @quantity )";
                             cmdItem.Parameters.AddWithValue("@orderId", order.Id);
                             cmdItem.Parameters.AddWithValue("@itemCode", item.Code);
                             cmdItem.Parameters.AddWithValue("@itemDescription", item.Description);
                             cmdItem.Parameters.AddWithValue("@itemPrice", item.Price);
+                            cmdItem.Parameters.AddWithValue("@quantity", item.Quantity);
                             cmdItem.ExecuteNonQuery();
                             conn.Close();
 
                         }
 
+                    }
+                }
+            }
+        }
+
+        public async Task CreateOrderAsync(Order order)
+        {
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                using (var cmd = conn.CreateCommand())
+                {
+                    await conn.OpenAsync();
+                    cmd.CommandText = $"INSERT INTO dbo.Orders( id, Customer_Id ,Total, TotalTax ) VALUES  (@orderId, @customerId, @total, @totalTax) ";
+
+                    cmd.Parameters.AddWithValue("@orderId", order.Id);
+                    cmd.Parameters.AddWithValue("@customerId", order.Customer.Id);
+                    cmd.Parameters.AddWithValue("@total", order.Total);
+                    cmd.Parameters.AddWithValue("@totalTax", order.TotaTax);
+
+                    await cmd.ExecuteNonQueryAsync();
+
+                    conn.Close();
+                    foreach (var item in order.Items)
+                    {
+                        using (var cmdItem = conn.CreateCommand())
+                        {
+                            await conn.OpenAsync();
+                            cmdItem.CommandText = $"INSERT INTO dbo.OrderItems(Code ,Price ,Description ,Order_Id ,Quantity ) VALUES (@itemCode  , @itemPrice, @itemDescription, @orderId , @quantity )";
+                            cmdItem.Parameters.AddWithValue("@orderId", order.Id);
+                            cmdItem.Parameters.AddWithValue("@itemCode", item.Code);
+                            cmdItem.Parameters.AddWithValue("@itemDescription", item.Description);
+                            cmdItem.Parameters.AddWithValue("@itemPrice", item.Price);
+                            cmdItem.Parameters.AddWithValue("@quantity", item.Quantity);
+                            await cmdItem.ExecuteNonQueryAsync();
+
+                            conn.Close();
+
+                        }
                     }
                 }
             }

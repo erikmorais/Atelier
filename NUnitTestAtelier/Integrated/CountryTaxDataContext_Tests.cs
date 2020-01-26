@@ -15,12 +15,6 @@ namespace Tests
         }
 
         [Test]
-        public void Test1()
-        {
-            Assert.Pass();
-        }
-
-        [Test]
         public async Task TestGetCountryTaxes()
         {
             CountryTaxDataContext taxeDataContext = new CountryTaxDataContext(_connectionString);

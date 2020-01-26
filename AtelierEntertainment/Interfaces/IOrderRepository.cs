@@ -9,6 +9,7 @@ namespace AtelierEntertainmentEntities.Interfaces
     public interface IOrderRepository
     {
         void CreateOrder(Order order);
+        Task CreateOrderAsync(Order order);
         Task<Order> GetSingleOrder(int orderId);
         Task<IList<Order>> GetOrdersByCustomer(Customer customerWithother);
     }

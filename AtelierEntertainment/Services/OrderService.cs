@@ -1,35 +1,43 @@
 ﻿using AtelierEntertainment.Entities;
 using AtelierEntertainment.Interfaces;
+using AtelierEntertainmentEntities.Interfaces;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AtelierEntertainmentEntities
 {
     public class OrderService : IOrderService
     {
-        private readonly ITaxRepository taxRepository;
+        private readonly IOrderRepository orderRepository;
         private readonly IOrderCalculationService orderCalculationService;
-        private readonly string connectionStr;
 
-        public OrderService(ITaxRepository taxRepository, IOrderCalculationService orderCalculation, string connectionStr)
+        public OrderService(IOrderRepository orderRepository, IOrderCalculationService orderCalculation)
         {
-            this.taxRepository = taxRepository;
+            this.orderRepository = orderRepository;
             this.orderCalculationService = orderCalculation;
-            this.connectionStr = connectionStr;
         }
         // TODO Convert to Async
         public void CreateOrder(Order order)
         {
-
             order = orderCalculationService.Calc(order).Result;
-            var dataContext = new OrderDataContext(connectionStr);
-
-            dataContext.CreateOrder(order);
+            orderRepository.CreateOrder(order);
         }
 
-        public Order ViewOrder(int porderId)
+        public async Task CreateOrderAsyn(Order order)
         {
-            throw new NotImplementedException();
+            order = await orderCalculationService.Calc(order);
+            await orderRepository.CreateOrderAsync(order);
+        }
+
+        public Order ViewOrder(int orderId)
+        {
+            return orderRepository.GetSingleOrder(orderId).Result;
+        }
+
+        public Task<Order> ViewOrderAsyn(int orderId)
+        {
+            return orderRepository.GetSingleOrder(orderId);
         }
     }
 }

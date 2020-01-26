@@ -25,6 +25,8 @@ namespace AtelierEntertainment.Services
                 total = order.Items.Select(a => a.Price * a.Quantity).Sum();
             }
             total += totalTax;
+            order.Total = total;
+            order.TotaTax = totalTax;
             return order;
         }
     }

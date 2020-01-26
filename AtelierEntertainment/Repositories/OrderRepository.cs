@@ -26,6 +26,11 @@ namespace AtelierEntertainment.Repositories
             _dbContext.CreateOrder(order);
         }
 
+        public async Task CreateOrderAsync(Order order)
+        {
+           await _dbContext.CreateOrderAsync(order);
+        }
+
         public Task<IList<Order>> GetOrdersByCustomer(Customer customer)
         {
             return _dbContext.GetOrdersByCustomer(customer);

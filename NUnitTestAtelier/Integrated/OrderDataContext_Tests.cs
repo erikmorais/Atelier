@@ -18,12 +18,6 @@ namespace Tests
         }
 
         [Test]
-        public void Test1()
-        {
-            Assert.Pass();
-        }
-
-        [Test]
         public async Task TestGetOrderByCustomer()
         {
             OrderDataContext orderDataContext = new OrderDataContext(_connectionString);
