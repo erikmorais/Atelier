@@ -24,12 +24,12 @@ namespace Tests
         }
 
         [Test]
-        public void TestGetCountryTaxes()
+        public void TestGetOrderByCustomer()
         {
             OrderDataContext orderDataContext = new OrderDataContext(_connectionString);
             var custumer = new Customer();
             custumer.Id = 3;
-            var orders =  orderDataContext.GetOrdersByCustomer(custumer);
+            var orders = orderDataContext.GetOrdersByCustomer(custumer);
 
             Assert.AreEqual(orders.Count, 2);
         }
@@ -40,6 +40,37 @@ namespace Tests
             var orders = OrderDataContext.LoadOrder(2);
 
             Assert.AreEqual(orders.Items.Count, 2);
+        }
+
+
+        [Test]
+        public void TestGetOrderStatic_Get_Single_Order()
+        {
+            OrderDataContext orderDataContext = new OrderDataContext(_connectionString);
+
+            var orders = orderDataContext.GetSingleOrder(2);
+
+            Assert.AreEqual(orders.Items.Count, 2);
+        }
+
+        [Test]
+        public async Task TestGetCustomer()
+        {
+            OrderDataContext orderDataContext = new OrderDataContext(_connectionString);
+
+            var customer = await orderDataContext.GetCustumer(1);
+
+            Assert.AreEqual(customer.Country,"UK");
+        }
+
+        [Test]
+        public async Task TestGetItems()
+        {
+            OrderDataContext orderDataContext = new OrderDataContext(_connectionString);
+
+            var items = await orderDataContext.GetOrderItems(2);
+
+            Assert.AreEqual(items.Count, 2);
         }
 
     }

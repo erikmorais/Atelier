@@ -3,6 +3,7 @@ using AtelierEntertainmentEntities.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace AtelierEntertainmentEntities
 {
@@ -78,6 +79,7 @@ namespace AtelierEntertainmentEntities
             }
             return result;
         }
+
         public void CreateOrder(Order order)
         {
             using (var conn = new SqlConnection(_connectionString))
@@ -115,11 +117,13 @@ namespace AtelierEntertainmentEntities
         public Order GetSingleOrder(int id)
         {
             var result = new Order { };
+
             using (var conn = new SqlConnection(_connectionString))
             {
-
                 using (var cmd = conn.CreateCommand())
                 {
+                    conn.Open();
+                    // cmd.CommandText = $"SELECT * FROM dbo.Orders WHERE Id = {id}";
                     cmd.CommandText = @"SELECT 
                                               Id
                                             ,Total
@@ -130,40 +134,107 @@ namespace AtelierEntertainmentEntities
                     cmd.Parameters.AddWithValue("@orderId", id);
 
                     var reader = cmd.ExecuteReader();
+                    reader.Read();
 
                     result.Id = id;
-                    result.Total = reader.GetDecimal(reader.GetOrdinal("Total"));
+                    result.Total = reader.GetDecimal(reader.GetOrdinal("Total")); //reader.GetDecimal(2);
+                    conn.Close();
+                    conn.Open();
                     using (var cmdItem = conn.CreateCommand())
                     {
-
-                        cmd.CommandText = @"SELECT 
+                        //cmd.CommandText = $"SELECT * FROM dbo.OrderItems WHERE OrderId = {id}";
+                        cmdItem.CommandText = @"SELECT 
                                                  Code
                                                 ,Quantity
                                                 ,Price
                                                 ,Description
                                                 ,Order_Id
-                                          FROM dbo.OrderItems WHERE OrderId = @orderId";
-                        cmd.Parameters.AddWithValue("@orderId", id);
+                                          FROM dbo.OrderItems WHERE Order_Id = @orderId";
 
-                        reader = cmd.ExecuteReader();
+                        cmdItem.Parameters.AddWithValue("@orderId", id);
 
-                        while (reader.Read())
+                        var readerItems = cmdItem.ExecuteReader();
+                        result.Items = new List<orderItem>();
+
+                        while (readerItems.Read())
                         {
                             result.Items.Add(new orderItem
                             {
-                                Code = reader.GetString(reader.GetOrdinal("Code")),
-                                Quantity = reader.GetDecimal(reader.GetOrdinal("Quantity")),
-                                Description = reader.GetString(reader.GetOrdinal("Description")),
-                                Price = reader.GetDecimal(reader.GetOrdinal("Price"))
+                                Code = readerItems.GetString(readerItems.GetOrdinal("Code")),
+                                Quantity = readerItems.GetDecimal(readerItems.GetOrdinal("Quantity")),
+                                Description = readerItems.GetString(readerItems.GetOrdinal("Description")),
+                                Price = readerItems.GetDecimal(readerItems.GetOrdinal("Price"))
                             });
                         }
                     }
-
+                    conn.Close();
                 }
             }
             return result;
         }
 
+
+        public async Task<IList<orderItem>> GetOrderItems(int orderId)
+        {
+            var items = new List<orderItem>();
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                using (var cmdItem = conn.CreateCommand())
+                {
+                    cmdItem.CommandText = @"SELECT 
+                                                 Code
+                                                ,Quantity
+                                                ,Price
+                                                ,Description
+                                                ,Order_Id
+                                          FROM dbo.OrderItems WHERE Order_Id = @orderId";
+
+                    cmdItem.Parameters.AddWithValue("@orderId", orderId);
+
+                    var readerItems = await cmdItem.ExecuteReaderAsync();
+
+                    while (await readerItems.ReadAsync())
+                    {
+                        items.Add(new orderItem
+                        {
+                            Code = readerItems.GetString(readerItems.GetOrdinal("Code")),
+                            Quantity = readerItems.GetDecimal(readerItems.GetOrdinal("Quantity")),
+                            Description = readerItems.GetString(readerItems.GetOrdinal("Description")),
+                            Price = readerItems.GetDecimal(readerItems.GetOrdinal("Price"))
+                        });
+                    }
+                }
+
+                conn.Close();
+            }
+            return items;
+        }
+        // TODO: Move it to another service
+        public async Task<Customer> GetCustumer(int id)
+        {
+            var customer = new Customer();
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                using (var cmd = conn.CreateCommand())
+                {
+                    await conn.OpenAsync();
+                    cmd.CommandText = @"SELECT 
+                                              Id
+                                            ,Country
+                                     FROM dbo.Customer WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    var reader = cmd.ExecuteReader();
+                    reader.Read();
+                    customer.Id = id;
+                    customer.Country = reader.GetString(reader.GetOrdinal("Country"));
+
+                }
+            }
+            return customer;
+        }
         // TODO: implement GetOrderByCustomer
         public IList<Order> GetOrdersByCustomer(Customer customer)
         {

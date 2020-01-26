@@ -11,7 +11,8 @@ namespace AtelierEntertainment.Entities
         public decimal TotaTax { get; internal set; }
 
     }
-
+    
+    // TODO: Fix name convenction
     public class orderItem
     {
         public string Code { get; set; }
