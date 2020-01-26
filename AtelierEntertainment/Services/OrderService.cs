@@ -9,11 +9,13 @@ namespace AtelierEntertainmentEntities
     {
         private readonly ITaxRepository taxRepository;
         private readonly IOrderCalculationService orderCalculationService;
+        private readonly string connectionStr;
 
-        public OrderService(ITaxRepository taxRepository, IOrderCalculationService orderCalculation)
+        public OrderService(ITaxRepository taxRepository, IOrderCalculationService orderCalculation, string connectionStr)
         {
             this.taxRepository = taxRepository;
             this.orderCalculationService = orderCalculation;
+            this.connectionStr = connectionStr;
         }
         // TODO Convert to Async
         public void CreateOrder(Order order)
@@ -26,7 +28,7 @@ namespace AtelierEntertainmentEntities
             order = orderCalculationService.Calc(order).Result;
 
 
-            var dataContext = new OrderDataContext();
+            var dataContext = new OrderDataContext(connectionStr);
 
             dataContext.CreateOrder(order);
         }

@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace AtelierEntertainment.Repositories
 {
+    /// <summary>
+    /// Decorator Pattern
+    /// </summary>
     public class TaxRepository : ITaxRepository
     {
         private readonly ICountryTaxRepository countryTaxRepository;

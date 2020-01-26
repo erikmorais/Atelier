@@ -7,6 +7,9 @@ using System.Text;
 
 namespace AtelierEntertainment.Repositories
 {
+    /// <summary>
+    /// Decorator Pattern
+    /// </summary>
 
     public class OrderRepository : IOrderRepository
     {

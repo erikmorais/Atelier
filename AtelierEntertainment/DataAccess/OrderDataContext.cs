@@ -8,8 +8,12 @@ namespace AtelierEntertainmentEntities
 {
     public class OrderDataContext : IOrderRepository
     {
-        const string ConnectionString = "Server=myServerAddress;Database=myDataBase;User Id=myUsername;Password = myPassword;";
+        private readonly string ConnectionString;// = "Server=DESKTOP-SFC808U;Database=Atelier;Integrated Security=true;";
 
+        public OrderDataContext(string connectionString)
+        {
+            this.ConnectionString = connectionString;
+        }
         public void CreateOrder(Order order)
         {
             using (var conn = new SqlConnection(ConnectionString))

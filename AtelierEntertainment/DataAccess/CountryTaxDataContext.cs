@@ -10,14 +10,20 @@ namespace AtelierEntertainment.DataAccess
 {
     public class CountryTaxDataContext : ICountryTaxRepository
     {
-        const string ConnectionString = "Server=myServerAddress;Database=myDataBase;User Id=myUsername;Password = myPassword;";
+        private readonly string ConnectionString;// = "Server=DESKTOP-SFC808U;Database=Atelier;Integrated Security=true;";
 
+        public  CountryTaxDataContext( string connectionString)
+        {
+            this.ConnectionString = connectionString;
+        }
         public async Task<List<CountryTax>> GetTaxes(string countryId)
         {
             List<CountryTax> taxes = new List<CountryTax>();
 
             using (var conn = new SqlConnection(ConnectionString))
             {
+                await conn.OpenAsync();
+
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"SELECT 
@@ -37,10 +43,12 @@ namespace AtelierEntertainment.DataAccess
                         countryTax.Country = countryId;
                         countryTax.TaxId = reader.GetInt32(reader.GetOrdinal("TaxId"));
                         countryTax.Percentual = reader.GetDouble(reader.GetOrdinal("Percentual"));
-
+                        taxes.Add(countryTax);
                     }
 
                 }
+
+                conn.Close();
 
                 return taxes;
             }
