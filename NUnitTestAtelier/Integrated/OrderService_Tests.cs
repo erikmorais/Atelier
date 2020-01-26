@@ -29,7 +29,7 @@ namespace OrderServices.Integrated
         public async Task CreateOrderTest_UK()
         {
             // Arrange
-            CountryTaxDataContext countryTaxDataContext = new CountryTaxDataContext(_connectionString);
+            TaxDataContext countryTaxDataContext = new TaxDataContext(_connectionString);
             OrderDataContext orderDataContext = new OrderDataContext(_connectionString);
 
             ITaxRepository taxRepository = new TaxRepository(countryTaxDataContext);
@@ -83,7 +83,7 @@ namespace OrderServices.Integrated
         public async Task CreateOrderTest_AU()
         {
             // Arrange
-            CountryTaxDataContext countryTaxDataContext = new CountryTaxDataContext(_connectionString);
+            TaxDataContext countryTaxDataContext = new TaxDataContext(_connectionString);
             OrderDataContext orderDataContext = new OrderDataContext(_connectionString);
 
             ITaxRepository taxRepository = new TaxRepository(countryTaxDataContext);
@@ -136,7 +136,7 @@ namespace OrderServices.Integrated
         public async Task CreateOrderTest_BR()
         {
             // Arrange
-            CountryTaxDataContext countryTaxDataContext = new CountryTaxDataContext(_connectionString);
+            TaxDataContext countryTaxDataContext = new TaxDataContext(_connectionString);
             OrderDataContext orderDataContext = new OrderDataContext(_connectionString);
 
             ITaxRepository taxRepository = new TaxRepository(countryTaxDataContext);

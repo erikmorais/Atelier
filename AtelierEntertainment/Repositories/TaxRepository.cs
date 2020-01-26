@@ -13,9 +13,9 @@ namespace AtelierEntertainment.Repositories
     /// </summary>
     public class TaxRepository : ITaxRepository
     {
-        private readonly CountryTaxDataContext countryTaxDataContext;
+        private readonly TaxDataContext countryTaxDataContext;
 
-        public TaxRepository(CountryTaxDataContext countryTaxDataContext)
+        public TaxRepository(TaxDataContext countryTaxDataContext)
         {
             this.countryTaxDataContext = countryTaxDataContext;
         }

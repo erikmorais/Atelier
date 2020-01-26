@@ -35,7 +35,7 @@ namespace AtelierEntertainmentEntities
                     cmd.CommandText = @"SELECT 
                                               Id
                                             ,Total
-                                            ,Customer_Id
+                                            ,CustomerId
                                             ,TotalTax
                                      FROM dbo.Orders WHERE Id = @orderId";
 
@@ -56,8 +56,8 @@ namespace AtelierEntertainmentEntities
                                                 ,Quantity
                                                 ,Price
                                                 ,Description
-                                                ,Order_Id
-                                          FROM dbo.OrderItems WHERE Order_Id = @orderId";
+                                                ,OrderId
+                                          FROM dbo.OrderItems WHERE OrderId = @orderId";
 
                         cmdItem.Parameters.AddWithValue("@orderId", id);
 
@@ -88,7 +88,7 @@ namespace AtelierEntertainmentEntities
                 using (var cmd = conn.CreateCommand())
                 {
                     conn.Open();
-                    cmd.CommandText = $"INSERT INTO dbo.Orders( id, Customer_Id ,Total, TotalTax ) VALUES  (@orderId, @customerId, @total, @totalTax) ";
+                    cmd.CommandText = $"INSERT INTO dbo.Orders( id, CustomerId ,Total, TotalTax ) VALUES  (@orderId, @customerId, @total, @totalTax) ";
 
                     cmd.Parameters.AddWithValue("@orderId", order.Id);
                     cmd.Parameters.AddWithValue("@customerId", order.Customer.Id);
@@ -103,7 +103,7 @@ namespace AtelierEntertainmentEntities
                         using (var cmdItem = conn.CreateCommand())
                         {
                             conn.Open();
-                            cmdItem.CommandText = $"INSERT INTO dbo.OrderItems(Code ,Price ,Description ,Order_Id ,Quantity ) VALUES (@itemCode  , @itemPrice, @itemDescription, @orderId , @quantity )";
+                            cmdItem.CommandText = $"INSERT INTO dbo.OrderItems(Code ,Price ,Description ,OrderId ,Quantity ) VALUES (@itemCode  , @itemPrice, @itemDescription, @orderId , @quantity )";
                             cmdItem.Parameters.AddWithValue("@orderId", order.Id);
                             cmdItem.Parameters.AddWithValue("@itemCode", item.Code);
                             cmdItem.Parameters.AddWithValue("@itemDescription", item.Description);
@@ -126,7 +126,7 @@ namespace AtelierEntertainmentEntities
                 using (var cmd = conn.CreateCommand())
                 {
                     await conn.OpenAsync();
-                    cmd.CommandText = $"INSERT INTO dbo.Orders( id, Customer_Id ,Total, TotalTax ) VALUES  (@orderId, @customerId, @total, @totalTax) ";
+                    cmd.CommandText = $"INSERT INTO dbo.Orders( id, CustomerId ,Total, TotalTax ) VALUES  (@orderId, @customerId, @total, @totalTax) ";
 
                     cmd.Parameters.AddWithValue("@orderId", order.Id);
                     cmd.Parameters.AddWithValue("@customerId", order.Customer.Id);
@@ -141,7 +141,7 @@ namespace AtelierEntertainmentEntities
                         using (var cmdItem = conn.CreateCommand())
                         {
                             await conn.OpenAsync();
-                            cmdItem.CommandText = $"INSERT INTO dbo.OrderItems(Code ,Price ,Description ,Order_Id ,Quantity ) VALUES (@itemCode  , @itemPrice, @itemDescription, @orderId , @quantity )";
+                            cmdItem.CommandText = $"INSERT INTO dbo.OrderItems(Code ,Price ,Description ,OrderId ,Quantity ) VALUES (@itemCode  , @itemPrice, @itemDescription, @orderId , @quantity )";
                             cmdItem.Parameters.AddWithValue("@orderId", order.Id);
                             cmdItem.Parameters.AddWithValue("@itemCode", item.Code);
                             cmdItem.Parameters.AddWithValue("@itemDescription", item.Description);
@@ -170,7 +170,7 @@ namespace AtelierEntertainmentEntities
                     cmd.CommandText = @"SELECT 
                                               Id
                                             ,Total
-                                            ,Customer_Id
+                                            ,CustomerId
                                             ,TotalTax
                                      FROM dbo.Orders WHERE Id = @orderId";
 
@@ -195,8 +195,8 @@ namespace AtelierEntertainmentEntities
                                                 ,Quantity
                                                 ,Price
                                                 ,Description
-                                                ,Order_Id
-                                          FROM dbo.OrderItems WHERE Order_Id = @orderId";
+                                                ,OrderId
+                                          FROM dbo.OrderItems WHERE OrderId = @orderId";
 
                         cmdItem.Parameters.AddWithValue("@orderId", id);
 
@@ -235,8 +235,8 @@ namespace AtelierEntertainmentEntities
                                                 ,Quantity
                                                 ,Price
                                                 ,Description
-                                                ,Order_Id
-                                          FROM dbo.OrderItems WHERE Order_Id = @orderId";
+                                                ,OrderId
+                                          FROM dbo.OrderItems WHERE OrderId = @orderId";
 
                     cmdItem.Parameters.AddWithValue("@orderId", orderId);
 
@@ -298,9 +298,9 @@ namespace AtelierEntertainmentEntities
                     cmd.CommandText = @"SELECT 
                                               Id
                                             ,Total
-                                            ,Customer_Id
+                                            ,CustomerId
                                             ,TotalTax
-                                     FROM dbo.Orders WHERE Customer_Id = @orderId";
+                                     FROM dbo.Orders WHERE CustomerId = @orderId";
 
                     cmd.Parameters.AddWithValue("@orderId", customer.Id);
 

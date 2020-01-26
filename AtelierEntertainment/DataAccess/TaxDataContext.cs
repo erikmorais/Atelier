@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace AtelierEntertainment.DataAccess
 {
-    public class CountryTaxDataContext
+    public class TaxDataContext
     {
         private readonly string ConnectionString;// = "Server=DESKTOP-SFC808U;Database=Atelier;Integrated Security=true;";
 
-        public  CountryTaxDataContext( string connectionString)
+        public  TaxDataContext( string connectionString)
         {
             this.ConnectionString = connectionString;
         }

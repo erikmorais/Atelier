@@ -18,7 +18,7 @@ namespace  DataAccess.Taxes
         [Test]
         public async Task TestGetCountryTaxes()
         {
-            CountryTaxDataContext taxeDataContext = new CountryTaxDataContext(_connectionString);
+            TaxDataContext taxeDataContext = new TaxDataContext(_connectionString);
 
             var taxes = await taxeDataContext.GetTaxes("UK");
 
