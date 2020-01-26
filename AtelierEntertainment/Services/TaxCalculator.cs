@@ -19,14 +19,14 @@ namespace AtelierEntertainmentEntities.Services
             this.countryTaxRepository = countryTaxRepository;
         }
 
-        public double CalcTaxOrder(Order order)
+        public decimal CalcTaxOrder(Order order)
         {
             if (_taxes == null)
             {
                 _taxes = countryTaxRepository.GetTaxes(order.Customer.Country).Result;
             }
 
-            double total = 0;
+            decimal total = 0;
             if (order.Items.Count > 0)
             {
                 foreach (var item in _taxes)
@@ -38,7 +38,7 @@ namespace AtelierEntertainmentEntities.Services
             return total;
         }
 
-        public async  Task<double> CalcTaxAsyn(Order order)
+        public async  Task<decimal> CalcTaxAsyn(Order order)
         {
 
             if (_taxes == null)
@@ -46,7 +46,7 @@ namespace AtelierEntertainmentEntities.Services
                 _taxes =  await countryTaxRepository.GetTaxes(order.Customer.Country);
             }
 
-            double total = 0;
+            decimal total = 0;
             if (order.Items.Count > 0)
             {
                 foreach (var item in _taxes)

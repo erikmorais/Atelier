@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AtelierEntertainment.DataAccess
 {
-    public class CountryTaxDataContext : ICountryTaxRepository
+    public class CountryTaxDataContext
     {
         private readonly string ConnectionString;// = "Server=DESKTOP-SFC808U;Database=Atelier;Integrated Security=true;";
 
@@ -42,7 +42,7 @@ namespace AtelierEntertainment.DataAccess
                         CountryTax countryTax = new CountryTax();
                         countryTax.Country = countryId;
                         countryTax.TaxId = reader.GetInt32(reader.GetOrdinal("TaxId"));
-                        countryTax.Percentual = reader.GetDouble(reader.GetOrdinal("Percentual"));
+                        countryTax.Percentual = reader.GetDecimal(reader.GetOrdinal("Percentual"));
                         taxes.Add(countryTax);
                     }
 

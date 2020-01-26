@@ -1,6 +1,6 @@
 ﻿
-delete from OrderItem
-delete from [Order] ;
+delete from OrderItems
+delete from Orders ;
 delete from Customer;
 delete from  CountryTaxes;
 
@@ -15,12 +15,15 @@ insert into Customer( Id, Country ) values ( 5,'BR') ;
 insert into Customer( Id, Country ) values ( 6,'BR') ;
 
 
-insert into [Order] (Id ,Total , Customer_Id , TotalTax) values (1,10,5,0);
-insert into OrderItem( Code ,Price ,Description ,Order_Id ,Quantity ) values ('A', 10,'product A' ,1 ,1);
+insert into Orders (Id ,Total , Customer_Id , TotalTax) values (1,10,5,0);
+insert into OrderItems( Code ,Price ,Description ,Order_Id ,Quantity ) values ('A', 10,'product A' ,1 ,1);
 
-insert into [Order] (Id ,Total , Customer_Id , TotalTax) values (2,20,6,0);
-insert into OrderItem( Code ,Price ,Description ,Order_Id ,Quantity ) values ('B', 5,'product B' ,2 ,2);
-insert into OrderItem( Code ,Price ,Description ,Order_Id ,Quantity ) values ('C', 2,'product C' ,2 ,5);
+insert into Orders (Id ,Total , Customer_Id , TotalTax) values (2,20,6,0);
+insert into OrderItems( Code ,Price ,Description ,Order_Id ,Quantity ) values ('B', 5,'product B' ,2 ,2);
+insert into OrderItems( Code ,Price ,Description ,Order_Id ,Quantity ) values ('C', 2,'product C' ,2 ,5);
+
+insert into Orders (Id ,Total , Customer_Id , TotalTax) values (3,10,5,0);
+insert into OrderItems( Code ,Price ,Description ,Order_Id ,Quantity ) values ('D', 10,'product D' ,3 ,1);
 
 --insert into [Order] (Id ,Total , Customer_Id , TotalTax) values (3,30,5,0);
 --insert into [Order] (Id ,Total , Customer_Id , TotalTax) values (4,10,6,0);

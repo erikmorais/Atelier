@@ -3,6 +3,6 @@ using System.Threading.Tasks;
 using AtelierEntertainment.Entities;
 public interface ITaxCalculator
 {
-    Task<double>  CalcTaxAsyn(Order order);
-    double CalcTaxOrder(Order order);
+    Task<decimal>  CalcTaxAsyn(Order order);
+    decimal CalcTaxOrder(Order order);
 }

@@ -8,6 +8,6 @@ namespace AtelierEntertainment.Entities
     {
         public int TaxId { get; set; }
         public string Country { get; set; }
-        public double Percentual { get; set; }
+        public decimal Percentual { get; set; }
     }
 }

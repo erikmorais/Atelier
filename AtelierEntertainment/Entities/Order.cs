@@ -7,8 +7,8 @@ namespace AtelierEntertainment.Entities
         public int Id { get; set; }
         public Customer Customer { get; set; }
         public List<orderItem> Items { get; set; }
-        public double Total { get; internal set; }
-        public double TotaTax { get; internal set; }
+        public decimal Total { get; internal set; }
+        public decimal TotaTax { get; internal set; }
 
     }
 
@@ -16,7 +16,7 @@ namespace AtelierEntertainment.Entities
     {
         public string Code { get; set; }
         public string Description { get; set; }
-        public double Price { get; set; }
-        public double Quantity { get; set; }
+        public decimal Price { get; set; }
+        public decimal Quantity { get; set; }
     }
 }

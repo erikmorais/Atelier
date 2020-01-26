@@ -26,12 +26,20 @@ namespace Tests
         [Test]
         public void TestGetCountryTaxes()
         {
-            IOrderRepository orderDataContext = new OrderDataContext(_connectionString);
+            OrderDataContext orderDataContext = new OrderDataContext(_connectionString);
             var custumer = new Customer();
             custumer.Id = 3;
             var orders =  orderDataContext.GetOrdersByCustomer(custumer);
 
             Assert.AreEqual(orders.Count, 2);
+        }
+
+        [Test]
+        public void TestGetOrderStatic_Refactored_Method()
+        {
+            var orders = OrderDataContext.LoadOrder(2);
+
+            Assert.AreEqual(orders.Items.Count, 2);
         }
 
     }

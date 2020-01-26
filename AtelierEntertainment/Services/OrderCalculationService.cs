@@ -18,8 +18,8 @@ namespace AtelierEntertainment.Services
         }
         public async Task<Order> Calc(Order order)
         {
-            double totalTax = await taxCalculator.CalcTaxAsyn(order);
-            double total = 0;
+            decimal totalTax = await taxCalculator.CalcTaxAsyn(order);
+            decimal total = 0;
             if (order.Items.Count > 0)
             {
                 total = order.Items.Select(a => a.Price * a.Quantity).Sum();

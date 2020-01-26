@@ -6,17 +6,81 @@ using System.Data.SqlClient;
 
 namespace AtelierEntertainmentEntities
 {
-    public class OrderDataContext : IOrderRepository
+    public class OrderDataContext
     {
-        private readonly string ConnectionString;// = "Server=DESKTOP-SFC808U;Database=Atelier;Integrated Security=true;";
-
+        private readonly string _connectionString;// = "Server=DESKTOP-SFC808U;Database=Atelier;Integrated Security=true;";
+        const string ConnectionString = "Server=DESKTOP-SFC808U;Database=Atelier;Integrated Security=true;";
         public OrderDataContext(string connectionString)
         {
-            this.ConnectionString = connectionString;
+            this._connectionString = connectionString;
+        }
+        /// <summary>
+        /// Method refactored
+        /// fixed Memory leak
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static Order LoadOrder(int id)
+        {
+            var result = new Order { };
+
+            using (var conn = new SqlConnection(ConnectionString))
+            {
+                using (var cmd = conn.CreateCommand())
+                {
+                    conn.Open();
+                    // cmd.CommandText = $"SELECT * FROM dbo.Orders WHERE Id = {id}";
+                    cmd.CommandText = @"SELECT 
+                                              Id
+                                            ,Total
+                                            ,Customer_Id
+                                            ,TotalTax
+                                     FROM dbo.Orders WHERE Id = @orderId";
+
+                    cmd.Parameters.AddWithValue("@orderId", id);
+
+                    var reader = cmd.ExecuteReader();
+                    reader.Read();
+
+                    result.Id = id;
+                    result.Total = reader.GetDecimal(reader.GetOrdinal("Total")); //reader.GetDecimal(2);
+                    conn.Close();
+                    conn.Open();
+                    using (var cmdItem = conn.CreateCommand())
+                    {
+                        //cmd.CommandText = $"SELECT * FROM dbo.OrderItems WHERE OrderId = {id}";
+                        cmdItem.CommandText = @"SELECT 
+                                                 Code
+                                                ,Quantity
+                                                ,Price
+                                                ,Description
+                                                ,Order_Id
+                                          FROM dbo.OrderItems WHERE Order_Id = @orderId";
+
+                        cmdItem.Parameters.AddWithValue("@orderId", id);
+
+                        var readerItems = cmdItem.ExecuteReader();
+                        result.Items = new List<orderItem>();
+
+                        while (readerItems.Read())
+                        {
+                            result.Items.Add(new orderItem
+                            {
+                                Code = readerItems.GetString(readerItems.GetOrdinal("Code")),
+                                Quantity = readerItems.GetDecimal(readerItems.GetOrdinal("Quantity")),
+                                Description = readerItems.GetString(readerItems.GetOrdinal("Description")),
+                                Price = readerItems.GetDecimal(readerItems.GetOrdinal("Price"))
+                            });
+                        }
+                    }
+                    conn.Close();
+                }
+            }
+            return result;
         }
         public void CreateOrder(Order order)
         {
-            using (var conn = new SqlConnection(ConnectionString))
+            using (var conn = new SqlConnection(_connectionString))
             {
                 using (var cmd = conn.CreateCommand())
                 {
@@ -51,7 +115,7 @@ namespace AtelierEntertainmentEntities
         public Order GetSingleOrder(int id)
         {
             var result = new Order { };
-            using (var conn = new SqlConnection(ConnectionString))
+            using (var conn = new SqlConnection(_connectionString))
             {
 
                 using (var cmd = conn.CreateCommand())
@@ -68,7 +132,7 @@ namespace AtelierEntertainmentEntities
                     var reader = cmd.ExecuteReader();
 
                     result.Id = id;
-                    result.Total = reader.GetDouble(reader.GetOrdinal("Total"));
+                    result.Total = reader.GetDecimal(reader.GetOrdinal("Total"));
                     using (var cmdItem = conn.CreateCommand())
                     {
 
@@ -88,9 +152,9 @@ namespace AtelierEntertainmentEntities
                             result.Items.Add(new orderItem
                             {
                                 Code = reader.GetString(reader.GetOrdinal("Code")),
-                                Quantity = reader.GetDouble(reader.GetOrdinal("Quantity")),
+                                Quantity = reader.GetDecimal(reader.GetOrdinal("Quantity")),
                                 Description = reader.GetString(reader.GetOrdinal("Description")),
-                                Price = reader.GetFloat(reader.GetOrdinal("Price"))
+                                Price = reader.GetDecimal(reader.GetOrdinal("Price"))
                             });
                         }
                     }
@@ -104,6 +168,20 @@ namespace AtelierEntertainmentEntities
         public IList<Order> GetOrdersByCustomer(Customer customer)
         {
             var result = new List<Order>();
+            // getting orders
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                //        cmd.CommandText = @"SELECT 
+                //                                  Id
+                //                                ,Total
+                //                                ,Customer_Id
+                //                                ,TotalTax
+                //                         FROM dbo.Orders WHERE Customer_Id  = @customerId";
+
+                //        cmd.Parameters.AddWithValue("@customerId", customer.Id);
+            }
+
+
             //using (var conn = new SqlConnection(ConnectionString))
             //{
 

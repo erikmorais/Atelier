@@ -18,7 +18,7 @@ namespace AtelierEntertainmentEntities.Tests
         [Test]
         public async Task TestGetCountryTaxes()
         {
-            ICountryTaxRepository taxeDataContext = new CountryTaxDataContext(_connectionString);
+            CountryTaxDataContext taxeDataContext = new CountryTaxDataContext(_connectionString);
             var taxes = await taxeDataContext.GetTaxes("UK");
 
             Assert.AreEqual(taxes.Count, 1);
