@@ -24,14 +24,17 @@ namespace Tests
         }
 
         [Test]
-        public void TestGetOrderByCustomer()
+        public async Task TestGetOrderByCustomer()
         {
             OrderDataContext orderDataContext = new OrderDataContext(_connectionString);
-            var custumer = new Customer();
-            custumer.Id = 3;
-            var orders = orderDataContext.GetOrdersByCustomer(custumer);
 
-            Assert.AreEqual(orders.Count, 2);
+            var custumer = new Customer
+            {
+                Id = 5
+            };
+            var orders = await orderDataContext.GetOrdersByCustomer(custumer);
+
+            Assert.AreEqual( 2, orders.Count);
         }
 
         [Test]
@@ -39,18 +42,18 @@ namespace Tests
         {
             var orders = OrderDataContext.LoadOrder(2);
 
-            Assert.AreEqual(orders.Items.Count, 2);
+            Assert.AreEqual(2, orders.Items.Count);
         }
 
 
         [Test]
-        public void TestGetOrderStatic_Get_Single_Order()
+        public async Task TestGetOrderStatic_Get_Single_Order()
         {
             OrderDataContext orderDataContext = new OrderDataContext(_connectionString);
 
-            var orders = orderDataContext.GetSingleOrder(2);
+            var orders = await orderDataContext.GetSingleOrder(2);
 
-            Assert.AreEqual(orders.Items.Count, 2);
+            Assert.AreEqual(2, orders.Items.Count);
         }
 
         [Test]
@@ -60,7 +63,7 @@ namespace Tests
 
             var customer = await orderDataContext.GetCustumer(1);
 
-            Assert.AreEqual(customer.Country,"UK");
+            Assert.AreEqual("UK", customer.Country);
         }
 
         [Test]
@@ -70,8 +73,23 @@ namespace Tests
 
             var items = await orderDataContext.GetOrderItems(2);
 
-            Assert.AreEqual(items.Count, 2);
+            Assert.AreEqual(2, items.Count);
         }
 
+        [Test]
+        public async Task testGetOrdersByCustemers()
+        {
+            OrderDataContext orderDataContext = new OrderDataContext(_connectionString);
+            var customer = new Customer()
+            {
+                Id = 5,
+                Country = "BR"
+            };
+            var orders = await orderDataContext.GetOrdersByCustomer(customer);
+
+            Assert.AreEqual(2, orders.Count);
+            Assert.AreEqual(1, orders[0].Items.Count);
+            Assert.AreEqual(1, orders[1].Items.Count);
+        }
     }
 }

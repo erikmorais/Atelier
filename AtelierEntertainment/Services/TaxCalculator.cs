@@ -10,26 +10,22 @@ namespace AtelierEntertainmentEntities.Services
 {
     public class TaxCalculator : ITaxCalculator
     {
-        private readonly ICountryTaxRepository countryTaxRepository;
-        private List<CountryTax> _taxes;
+        private readonly ITaxRepository taxRepository;
 
 
-        public TaxCalculator(ICountryTaxRepository countryTaxRepository)
+        public TaxCalculator(ITaxRepository taxRepository)
         {
-            this.countryTaxRepository = countryTaxRepository;
+            this.taxRepository = taxRepository;
         }
 
         public decimal CalcTaxOrder(Order order)
         {
-            if (_taxes == null)
-            {
-                _taxes = countryTaxRepository.GetTaxes(order.Customer.Country).Result;
-            }
+            var taxes = taxRepository.getCountryTaxes(order.Customer.Country).Result;
 
             decimal total = 0;
             if (order.Items.Count > 0)
             {
-                foreach (var item in _taxes)
+                foreach (var item in taxes)
                 {
                     total += order.Items.Select(a => a.Price * a.Quantity * (1 + item.Percentual)).Sum();
                 }
@@ -38,18 +34,15 @@ namespace AtelierEntertainmentEntities.Services
             return total;
         }
 
-        public async  Task<decimal> CalcTaxAsyn(Order order)
+        public async Task<decimal> CalcTaxAsyn(Order order)
         {
 
-            if (_taxes == null)
-            {
-                _taxes =  await countryTaxRepository.GetTaxes(order.Customer.Country);
-            }
+            var taxes = await taxRepository.getCountryTaxes(order.Customer.Country);
 
             decimal total = 0;
             if (order.Items.Count > 0)
             {
-                foreach (var item in _taxes)
+                foreach (var item in taxes)
                 {
                     total += order.Items.Select(a => a.Price * a.Quantity * (1 + item.Percentual)).Sum();
                 }

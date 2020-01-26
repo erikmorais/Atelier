@@ -3,6 +3,7 @@ using AtelierEntertainmentEntities.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AtelierEntertainmentEntities
@@ -114,7 +115,7 @@ namespace AtelierEntertainmentEntities
             }
         }
 
-        public Order GetSingleOrder(int id)
+        public async Task<Order> GetSingleOrder(int id)
         {
             var result = new Order { };
 
@@ -122,7 +123,7 @@ namespace AtelierEntertainmentEntities
             {
                 using (var cmd = conn.CreateCommand())
                 {
-                    conn.Open();
+                    await conn.OpenAsync();
                     // cmd.CommandText = $"SELECT * FROM dbo.Orders WHERE Id = {id}";
                     cmd.CommandText = @"SELECT 
                                               Id
@@ -133,13 +134,17 @@ namespace AtelierEntertainmentEntities
 
                     cmd.Parameters.AddWithValue("@orderId", id);
 
-                    var reader = cmd.ExecuteReader();
-                    reader.Read();
+                    var reader = await cmd.ExecuteReaderAsync();
+
+                    await reader.ReadAsync();
 
                     result.Id = id;
                     result.Total = reader.GetDecimal(reader.GetOrdinal("Total")); //reader.GetDecimal(2);
+
                     conn.Close();
-                    conn.Open();
+
+                    await conn.OpenAsync();
+
                     using (var cmdItem = conn.CreateCommand())
                     {
                         //cmd.CommandText = $"SELECT * FROM dbo.OrderItems WHERE OrderId = {id}";
@@ -153,7 +158,8 @@ namespace AtelierEntertainmentEntities
 
                         cmdItem.Parameters.AddWithValue("@orderId", id);
 
-                        var readerItems = cmdItem.ExecuteReader();
+                        var readerItems = await cmdItem.ExecuteReaderAsync();
+
                         result.Items = new List<orderItem>();
 
                         while (readerItems.Read())
@@ -235,71 +241,50 @@ namespace AtelierEntertainmentEntities
             }
             return customer;
         }
-        // TODO: implement GetOrderByCustomer
-        public IList<Order> GetOrdersByCustomer(Customer customer)
+        // TODO: Implement error handling
+        // 
+        public async Task<IList<Order>> GetOrdersByCustomer(Customer customer)
         {
             var result = new List<Order>();
-            // getting orders
+            var orderItemsTasks = new List<Task<List<orderItem>>>();
+
             using (var conn = new SqlConnection(_connectionString))
             {
-                //        cmd.CommandText = @"SELECT 
-                //                                  Id
-                //                                ,Total
-                //                                ,Customer_Id
-                //                                ,TotalTax
-                //                         FROM dbo.Orders WHERE Customer_Id  = @customerId";
+                await conn.OpenAsync();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT 
+                                              Id
+                                            ,Total
+                                            ,Customer_Id
+                                            ,TotalTax
+                                     FROM dbo.Orders WHERE Customer_Id = @orderId";
 
-                //        cmd.Parameters.AddWithValue("@customerId", customer.Id);
+                    cmd.Parameters.AddWithValue("@orderId", customer.Id);
+
+                    var reader = await cmd.ExecuteReaderAsync();
+                    while (await reader.ReadAsync())
+                    {
+                        var order = new Order
+                        {
+                            Customer = customer,
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Total = reader.GetDecimal(reader.GetOrdinal("Total")) //reader.GetDecimal(2);
+                        };
+
+                        result.Add(order);
+                    }
+
+                }
+                conn.Close();
             }
 
+            foreach (var item in result)
+            {
+                var orderItems = await this.GetOrderItems(item.Id);
+                item.Items = orderItems.ToList<orderItem>();
+            }
 
-            //using (var conn = new SqlConnection(ConnectionString))
-            //{
-
-            //    using (var cmd = conn.CreateCommand())
-            //    {
-            //        cmd.CommandText = @"SELECT 
-            //                                  Id
-            //                                ,Total
-            //                                ,Customer_Id
-            //                                ,TotalTax
-            //                         FROM dbo.Orders WHERE Customer_Id  = @customerId";
-
-            //        cmd.Parameters.AddWithValue("@customerId", customer.Id);
-
-            //        var reader = cmd.ExecuteReader();
-
-            //        result.Customer = customer;
-            //        result.Id = reader.GetInt32(reader.GetOrdinal("Id"));
-            //        result.Total = reader.GetDouble(reader.GetOrdinal("Total"));
-            //        using (var cmdItem = conn.CreateCommand())
-            //        {
-
-            //            cmd.CommandText = @"SELECT 
-            //                                     Code
-            //                                    ,Quantity
-            //                                    ,Price
-            //                                    ,Description
-            //                                    ,Order_Id
-            //                              FROM dbo.OrderItems WHERE OrderId = @orderId";
-            //            cmd.Parameters.AddWithValue("@orderId", id);
-
-            //            reader = cmd.ExecuteReader();
-
-            //            while (reader.Read())
-            //            {
-            //                result.Items.Add(new orderItem
-            //                {
-            //                    Code = reader.GetString(reader.GetOrdinal("Code")),
-            //                    Quantity = reader.GetDouble(reader.GetOrdinal("Quantity")),
-            //                    Description = reader.GetString(reader.GetOrdinal("Description")),
-            //                    Price = reader.GetFloat(reader.GetOrdinal("Price"))
-            //                });
-            //            }
-            //        }
-
-            //    }
-            //}
             return result;
         }
     }

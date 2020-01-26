@@ -5,7 +5,7 @@ delete from Customer;
 delete from  CountryTaxes;
 
 insert into CountryTaxes(TaxId ,Country ,Percentual) values (1,'UK',0.20);
-insert into CountryTaxes(TaxId ,Country ,Percentual) values (1,'AU',0.10);
+insert into CountryTaxes(TaxId ,Country ,Percentual) values (2,'AU',0.10);
 
 insert into Customer( Id, Country ) values ( 1,'UK') ;
 insert into Customer( Id, Country ) values ( 2,'UK') ;

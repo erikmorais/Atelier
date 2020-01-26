@@ -1,4 +1,5 @@
-﻿using AtelierEntertainment.Entities;
+﻿using AtelierEntertainment.DataAccess;
+using AtelierEntertainment.Entities;
 using AtelierEntertainment.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -12,15 +13,15 @@ namespace AtelierEntertainment.Repositories
     /// </summary>
     public class TaxRepository : ITaxRepository
     {
-        private readonly ICountryTaxRepository countryTaxRepository;
+        private readonly CountryTaxDataContext countryTaxDataContext;
 
-        public TaxRepository(ICountryTaxRepository countryTaxRepository)
+        public TaxRepository(CountryTaxDataContext countryTaxDataContext)
         {
-            this.countryTaxRepository = countryTaxRepository;
+            this.countryTaxDataContext = countryTaxDataContext;
         }
         public async Task<List<CountryTax>> getCountryTaxes(string countryId)
         {
-            return await countryTaxRepository.GetTaxes(countryId);
+            return await countryTaxDataContext.GetTaxes(countryId);
         }
     }
 }

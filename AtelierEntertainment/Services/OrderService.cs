@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace AtelierEntertainmentEntities
 {
-    public class OrderService
+    public class OrderService : IOrderService
     {
         private readonly ITaxRepository taxRepository;
         private readonly IOrderCalculationService orderCalculationService;
